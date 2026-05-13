@@ -1,5 +1,7 @@
+import 'dotenv/config';
+
 /**
- * Configuração do Prisma 7 (JavaScript Nativo).
+ * Configuração do Prisma 7 com carregamento explícito de ambiente.
  */
 export default {
   datasource: {
