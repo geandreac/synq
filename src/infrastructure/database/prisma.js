@@ -11,11 +11,7 @@ const url = process.env.DATABASE_URL?.trim().replace(/^["']|["']$/g, '');
 console.log(`[PRISMA] Inicializando com URL: [${url?.substring(0, 20)}...]`);
 
 export const prisma = new PrismaClient({
-  datasources: {
-    db: {
-      url: url
-    }
-  }
+  datasourceUrl: url
 });
 
 // Teste de conexão opcional (apenas log)
