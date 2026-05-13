@@ -12,10 +12,10 @@ if (process.env.DATABASE_URL) {
   console.log(`[PRISMA DEBUG] URL final: [${url.substring(0, 20)}...${url.substring(url.length - 10)}]`);
   console.log(`[PRISMA DEBUG] Comprimento final:`, url.length);
   
-  const pool = new Pool({ 
-    connectionString: url, 
-    webSocketConstructor: ws 
-  });
+  // Modo de compatibilidade máxima: URL direta no construtor
+  const pool = new Pool({ connectionString: url });
+  pool.webSocketConstructor = ws;
+  
   const adapter = new PrismaNeon(pool);
   prisma = new PrismaClient({ adapter });
 } else {
