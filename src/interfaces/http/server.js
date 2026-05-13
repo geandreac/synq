@@ -25,11 +25,6 @@ app.route('/lists', lists);
 app.route('/cards', cards);
 app.get('/health', (c) => c.json({ status: 'healthy' }));
 
-// 404 Handler para API (Garante JSON em rotas não encontradas)
-app.notFound((c) => {
-  return c.json({ error: 'Rota não encontrada' }, 404);
-});
-
 // Serve estáticos (JS, CSS, etc.) - Fora de /api
 app.use('/assets/*', serveStatic({ root: './web/dist' }));
 app.use('/favicon.ico', serveStatic({ path: './web/dist/favicon.ico' }));
@@ -57,4 +52,9 @@ console.log(`[SYNQ] Server is running on port ${port}`);
 serve({
   fetch: app.fetch,
   port: Number(port)
+});
+
+// 404 Handler Final (Garante JSON se nada acima coincidir)
+app.notFound((c) => {
+  return c.json({ error: 'Rota não encontrada' }, 404);
 });
