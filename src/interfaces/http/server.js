@@ -17,6 +17,15 @@ const app = new Hono();
 app.use('*', logger());
 app.use('*', cors());
 
+// Global Error Handler (Captura erros do banco ou lógica)
+app.onError((err, c) => {
+  console.error(`\n[SERVER ERROR]`, err);
+  return c.json({ 
+    error: 'Falha no processamento do registro', 
+    details: err.message 
+  }, 500);
+});
+
 // Rotas da API
 app.route('/auth', auth);
 app.route('/workspaces', workspaces);
