@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "npm install && npm run build:web && npx prisma generate",
-    "build:web": "cd web && npm install && npm run build",
+    "build:web": "cd web && npm install --include=dev && npm run build",
     "dev": "node src/interfaces/http/server.js",
     "start": "node src/interfaces/http/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"

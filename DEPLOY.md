@@ -41,6 +41,7 @@ O **Render** é uma excelente plataforma para o nosso modelo de arquitetura (Hon
     - **Environment**: `Node`
     - **Build Command**: `npm run build`
     - **Start Command**: `npm start`
+    
 5.  Clique em **Advanced** para adicionar as **Environment Variables**:
 
 | Variável | Valor sugerido |
