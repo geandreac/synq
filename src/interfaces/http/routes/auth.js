@@ -26,6 +26,7 @@ const loginSchema = z.object({
 // [POST] /auth/signup
 auth.post('/signup', zValidator('json', signupSchema), async (c) => {
   const data = c.req.valid('json');
+  console.log(`\n[DEBUG] Iniciando Registro para:`, data.email);
   
   try {
     const result = await registerUser.execute(data);

@@ -56,6 +56,7 @@ app.get('*', (c, next) => {
 });
 
 const port = process.env.PORT || 3000;
+console.log(`\n[SYNQ] SISTEMA DE LOGS ATIVADO - PORTA: ${port}`);
 console.log(`[SYNQ] Server is running on port ${port}`);
 
 serve({
