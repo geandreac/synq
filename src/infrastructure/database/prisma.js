@@ -8,9 +8,9 @@ let prisma;
 
 console.log(`[PRISMA DEBUG] DATABASE_URL carregada:`, !!process.env.DATABASE_URL);
 if (process.env.DATABASE_URL) {
-  const url = process.env.DATABASE_URL.trim().replace(/^["'](.+)["']$/, '$1');
-  console.log(`[PRISMA DEBUG] Comprimento da URL (limpa):`, url.length);
-  console.log(`[PRISMA DEBUG] Início da URL:`, url.substring(0, 15) + "...");
+  const url = process.env.DATABASE_URL.trim().replace(/^["']|["']$/g, '').replace(/[\r\n]/g, '');
+  console.log(`[PRISMA DEBUG] URL final: [${url.substring(0, 20)}...${url.substring(url.length - 10)}]`);
+  console.log(`[PRISMA DEBUG] Comprimento final:`, url.length);
   
   const pool = new Pool({ 
     connectionString: url, 
