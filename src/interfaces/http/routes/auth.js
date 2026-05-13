@@ -31,7 +31,8 @@ auth.post('/signup', zValidator('json', signupSchema), async (c) => {
     const result = await registerUser.execute(data);
     return c.json(result, result.user ? 201 : 200);
   } catch (error) {
-    return c.json({ error: 'Falha no processamento do registro' }, 500);
+    console.error(`[SIGNUP ERROR]`, error);
+    return c.json({ error: 'Falha no processamento do registro', details: error.message }, 500);
   }
 });
 
