@@ -8,6 +8,7 @@ import { jwt } from 'hono/jwt';
 export const authMiddleware = (secret) => {
     return jwt({
         secret: secret || process.env.JWT_SECRET || 'synq-super-secret-dev-key',
+        alg: 'HS256'
     });
 };
 
