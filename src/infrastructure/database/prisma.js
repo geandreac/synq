@@ -1,7 +1,13 @@
+import 'dotenv/config';
 import { PrismaClient } from '@prisma/client';
 import { PrismaNeon } from '@prisma/adapter-neon';
 import { Pool } from '@neondatabase/serverless';
 import ws from 'ws';
+
+console.log(`[PRISMA DEBUG] URL presente:`, !!process.env.DATABASE_URL);
+if (process.env.DATABASE_URL) {
+  console.log(`[PRISMA DEBUG] Início da URL:`, process.env.DATABASE_URL.substring(0, 15) + "...");
+}
 
 /**
  * Instância Singleton do Prisma Client com Adapter do Neon.
