@@ -1,0 +1,29 @@
+{
+  "name": "synq",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "build": "npm install && npm run build:web && npx prisma generate",
+    "build:web": "cd web && npm install && npm run build",
+    "dev": "node src/interfaces/http/server.js",
+    "start": "node src/interfaces/http/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@hono/node-server": "^2.0.2",
+    "@prisma/client": "^7.8.0",
+    "argon2": "^0.44.0",
+    "dotenv": "^17.4.2",
+    "hono": "^4.12.18",
+    "prisma": "^7.8.0",
+    "zod": "^4.4.3"
+  }
+}
