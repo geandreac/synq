@@ -28,11 +28,19 @@ apiRoutes.get('/health', (c) => c.json({ status: 'healthy' }));
 
 app.route('/api', apiRoutes);
 
-// Serve Frontend Static Files in Production
-app.use('*', serveStatic({ root: './web/dist' }));
+// Serve estáticos (JS, CSS, etc.) - Fora de /api
+app.use('/assets/*', serveStatic({ root: './web/dist' }));
+app.use('/favicon.ico', serveStatic({ path: './web/dist/favicon.ico' }));
+app.use('/manifest.webmanifest', serveStatic({ path: './web/dist/manifest.webmanifest' }));
+app.use('/sw.js', serveStatic({ path: './web/dist/sw.js' }));
 
-// Fallback para SPA (Single Page Application)
-app.get('*', serveStatic({ path: './web/dist/index.html' }));
+// Fallback para SPA (Single Page Application) - Apenas para GET e fora de /api
+app.get('*', (c, next) => {
+  if (c.req.path.startsWith('/api') || c.req.path.includes('.')) {
+    return next();
+  }
+  return serveStatic({ path: './web/dist/index.html' })(c, next);
+});
 
 const port = process.env.PORT || 3000;
 console.log(`[SYNQ] Server is running on port ${port}`);
