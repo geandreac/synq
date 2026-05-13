@@ -17,16 +17,19 @@ const app = new Hono();
 app.use('*', logger());
 app.use('*', cors());
 
-// Rotas da API (Prefixadas com /api para evitar conflito com estáticos)
-const apiRoutes = new Hono();
-apiRoutes.route('/auth', auth);
-apiRoutes.route('/workspaces', workspaces);
-apiRoutes.route('/boards', boards);
-apiRoutes.route('/lists', lists);
-apiRoutes.route('/cards', cards);
-apiRoutes.get('/health', (c) => c.json({ status: 'healthy' }));
+// Global Error Handler (Garante resposta JSON em erros)
+app.onError((err, c) => {
+  console.error(`[SERVER ERROR]`, err);
+  return c.json({ error: 'Erro interno no servidor', message: err.message }, 500);
+});
 
-app.route('/api', apiRoutes);
+// Rotas da API (Prefixadas com /api para evitar conflito com estáticos)
+app.route('/api/auth', auth);
+app.route('/api/workspaces', workspaces);
+app.route('/api/boards', boards);
+app.route('/api/lists', lists);
+app.route('/api/cards', cards);
+app.get('/api/health', (c) => c.json({ status: 'healthy' }));
 
 // Serve estáticos (JS, CSS, etc.) - Fora de /api
 app.use('/assets/*', serveStatic({ root: './web/dist' }));
