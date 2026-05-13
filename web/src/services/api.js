@@ -2,11 +2,13 @@
  * Serviço de API do SYNQ.
  * Centraliza as chamadas ao backend com tratamento de erros padronizado.
  */
-const API_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '' : 'http://localhost:3000');
+const API_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '/api' : 'http://localhost:3000/api');
 
 export const api = {
     async request(endpoint, options = {}) {
         const url = `${API_BASE_URL}${endpoint}`;
+        console.log(`[SYNQ API] Requesting: ${url}`, options.method || 'GET');
+        
         const headers = {
             'Content-Type': 'application/json',
             ...options.headers,
@@ -22,7 +24,7 @@ export const api = {
 
             return data;
         } catch (error) {
-            console.error(`[API ERROR] ${endpoint}:`, error.message);
+            console.error(`[API ERROR] ${endpoint}:`, error);
             throw error;
         }
     },

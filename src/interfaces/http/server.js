@@ -17,15 +17,16 @@ const app = new Hono();
 app.use('*', logger());
 app.use('*', cors());
 
-// Rotas da API
-app.route('/auth', auth);
-app.route('/workspaces', workspaces);
-app.route('/boards', boards);
-app.route('/lists', lists);
-app.route('/cards', cards);
+// Rotas da API (Prefixadas com /api para evitar conflito com estáticos)
+const apiRoutes = new Hono();
+apiRoutes.route('/auth', auth);
+apiRoutes.route('/workspaces', workspaces);
+apiRoutes.route('/boards', boards);
+apiRoutes.route('/lists', lists);
+apiRoutes.route('/cards', cards);
+apiRoutes.get('/health', (c) => c.json({ status: 'healthy' }));
 
-// Health Check
-app.get('/health', (c) => c.json({ status: 'healthy' }));
+app.route('/api', apiRoutes);
 
 // Serve Frontend Static Files in Production
 app.use('*', serveStatic({ root: './web/dist' }));
