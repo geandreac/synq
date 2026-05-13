@@ -17,19 +17,18 @@ const app = new Hono();
 app.use('*', logger());
 app.use('*', cors());
 
-// Global Error Handler (Garante resposta JSON em erros)
-app.onError((err, c) => {
-  console.error(`[SERVER ERROR]`, err);
-  return c.json({ error: 'Erro interno no servidor', message: err.message }, 500);
-});
+// Rotas da API
+app.route('/auth', auth);
+app.route('/workspaces', workspaces);
+app.route('/boards', boards);
+app.route('/lists', lists);
+app.route('/cards', cards);
+app.get('/health', (c) => c.json({ status: 'healthy' }));
 
-// Rotas da API (Prefixadas com /api para evitar conflito com estáticos)
-app.route('/api/auth', auth);
-app.route('/api/workspaces', workspaces);
-app.route('/api/boards', boards);
-app.route('/api/lists', lists);
-app.route('/api/cards', cards);
-app.get('/api/health', (c) => c.json({ status: 'healthy' }));
+// 404 Handler para API (Garante JSON em rotas não encontradas)
+app.notFound((c) => {
+  return c.json({ error: 'Rota não encontrada' }, 404);
+});
 
 // Serve estáticos (JS, CSS, etc.) - Fora de /api
 app.use('/assets/*', serveStatic({ root: './web/dist' }));
@@ -37,9 +36,16 @@ app.use('/favicon.ico', serveStatic({ path: './web/dist/favicon.ico' }));
 app.use('/manifest.webmanifest', serveStatic({ path: './web/dist/manifest.webmanifest' }));
 app.use('/sw.js', serveStatic({ path: './web/dist/sw.js' }));
 
-// Fallback para SPA (Single Page Application) - Apenas para GET e fora de /api
+// Fallback para SPA (Single Page Application) - Apenas para GET
 app.get('*', (c, next) => {
-  if (c.req.path.startsWith('/api') || c.req.path.includes('.')) {
+  const path = c.req.path;
+  // Se for uma rota de API conhecida ou tiver extensão, pula o fallback
+  if (path.startsWith('/auth') || 
+      path.startsWith('/workspaces') || 
+      path.startsWith('/boards') || 
+      path.startsWith('/lists') || 
+      path.startsWith('/cards') ||
+      path.includes('.')) {
     return next();
   }
   return serveStatic({ path: './web/dist/index.html' })(c, next);
