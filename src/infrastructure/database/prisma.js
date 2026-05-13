@@ -15,5 +15,4 @@ const adapter = new PrismaPg(pool);
 export const prisma = new PrismaClient({ adapter });
 
 prisma.$connect()
-  .then(() => console.log('[PRISMA] Conexão estabelecida com sucesso (Adapter PG).'))
-  .catch((err) => console.error('[PRISMA] Erro ao conectar no banco:', err.message));
+  .catch((err) => console.error(err.message));

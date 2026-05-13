@@ -26,13 +26,11 @@ const loginSchema = z.object({
 // [POST] /auth/signup
 auth.post('/signup', zValidator('json', signupSchema), async (c) => {
   const data = c.req.valid('json');
-  console.log(`\n[DEBUG] Iniciando Registro para:`, data.email);
   
   try {
     const result = await registerUser.execute(data);
     return c.json(result, result.user ? 201 : 200);
   } catch (error) {
-    console.error(`[SIGNUP ERROR]`, error);
     return c.json({ error: 'Falha no processamento do registro', details: error.message }, 500);
   }
 });
