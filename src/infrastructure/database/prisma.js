@@ -1,26 +1,24 @@
 import 'dotenv/config';
 import { PrismaClient } from '@prisma/client';
-import { PrismaNeon } from '@prisma/adapter-neon';
-import { Pool } from '@neondatabase/serverless';
-import ws from 'ws';
 
-let prisma;
+/**
+ * Instância do Prisma Client configurada para máxima estabilidade.
+ * Removemos o adapter serverless para evitar conflitos no Windows/Localhost.
+ * O Prisma gerencia a conexão nativamente usando a DATABASE_URL.
+ */
+const url = process.env.DATABASE_URL?.trim().replace(/^["']|["']$/g, '');
 
-console.log(`[PRISMA DEBUG] DATABASE_URL carregada:`, !!process.env.DATABASE_URL);
-if (process.env.DATABASE_URL) {
-  const url = process.env.DATABASE_URL.trim().replace(/^["']|["']$/g, '').replace(/[\r\n]/g, '');
-  console.log(`[PRISMA DEBUG] URL final: [${url.substring(0, 20)}...${url.substring(url.length - 10)}]`);
-  console.log(`[PRISMA DEBUG] Comprimento final:`, url.length);
-  
-  // Modo de compatibilidade máxima: URL direta no construtor
-  const pool = new Pool({ connectionString: url });
-  pool.webSocketConstructor = ws;
-  
-  const adapter = new PrismaNeon(pool);
-  prisma = new PrismaClient({ adapter });
-} else {
-  console.error('[PRISMA ERROR] DATABASE_URL não encontrada!');
-  prisma = new PrismaClient();
-}
+console.log(`[PRISMA] Inicializando com URL: [${url?.substring(0, 20)}...]`);
 
-export { prisma };
+export const prisma = new PrismaClient({
+  datasources: {
+    db: {
+      url: url
+    }
+  }
+});
+
+// Teste de conexão opcional (apenas log)
+prisma.$connect()
+  .then(() => console.log('[PRISMA] Conexão estabelecida com sucesso.'))
+  .catch((err) => console.error('[PRISMA] Erro ao conectar no banco:', err.message));
