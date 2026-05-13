@@ -9,6 +9,22 @@ const KanbanView = ({ board, onBack }) => {
   const [newColumnName, setNewColumnName] = useState('');
   const [addingCardToList, setAddingCardToList] = useState(null); 
   const [newCardTitle, setNewCardTitle] = useState('');
+  const [selectedCard, setSelectedCard] = useState(null);
+
+  const handleUpdateCard = async (cardId, updates) => {
+    try {
+        await api.cards.update(cardId, updates);
+        setColumns(columns.map(col => ({
+            ...col,
+            cards: col.cards.map(c => c.id === cardId ? { ...c, ...updates } : c)
+        })));
+        if (selectedCard?.id === cardId) {
+            setSelectedCard({ ...selectedCard, ...updates });
+        }
+    } catch (err) {
+        console.error('Erro ao atualizar cartão:', err);
+    }
+  };
 
   const onDragEnd = async (result) => {
     const { destination, source, draggableId } = result;
@@ -150,6 +166,7 @@ const KanbanView = ({ board, onBack }) => {
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
+                            onClick={() => setSelectedCard(card)}
                           >
                             <p className="card-title">{card.title}</p>
                             {card.dueDate && (
@@ -195,6 +212,47 @@ const KanbanView = ({ board, onBack }) => {
           )}
         </div>
       </div>
+
+      {/* Modal de Edição Editorial */}
+      {selectedCard && (
+          <div className="modal-overlay" onClick={() => setSelectedCard(null)}>
+              <div className="modal-content editorial-modal glass" onClick={e => e.stopPropagation()}>
+                  <button className="modal-close" onClick={() => setSelectedCard(null)}>✖</button>
+                  
+                  <header className="modal-header">
+                      <input 
+                          className="editable-title"
+                          value={selectedCard.title}
+                          onChange={(e) => handleUpdateCard(selectedCard.id, { title: e.target.value })}
+                      />
+                      <div className="modal-meta">
+                          <span className="meta-item">STATUS: <b>{columns.find(c => c.cards.some(card => card.id === selectedCard.id))?.name}</b></span>
+                          <span className="meta-item">CRIADO EM: <b>{new Date(selectedCard.createdAt || Date.now()).toLocaleDateString()}</b></span>
+                      </div>
+                  </header>
+
+                  <main className="modal-body">
+                      <section className="modal-section">
+                          <h4>DESCRIÇÃO</h4>
+                          <textarea 
+                              placeholder="Adicione uma descrição detalhada para este cartão..."
+                              value={selectedCard.description || ''}
+                              onChange={(e) => handleUpdateCard(selectedCard.id, { description: e.target.value })}
+                          />
+                      </section>
+                  </main>
+
+                  <footer className="modal-footer">
+                      <button className="btn-delete" onClick={() => {
+                          if(confirm('Deseja excluir este cartão?')) {
+                              // Implementar exclusão
+                              setSelectedCard(null);
+                          }
+                      }}>EXCLUIR CARTÃO</button>
+                  </footer>
+              </div>
+          </div>
+      )}
     </DragDropContext>
   );
 };

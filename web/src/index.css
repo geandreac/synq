@@ -1,111 +1,114 @@
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  /* OKLCH Color Tokens - Perceptually Uniform & Modern */
+  --bg: oklch(99% 0.01 260); /* White with a hint of brand tint */
+  --text: oklch(45% 0.02 260); /* Refined neutral body text */
+  --text-h: oklch(15% 0.04 260); /* Deep, near-black heading text */
+  --border: oklch(90% 0.02 260); /* Subtle boundaries */
+  --code-bg: oklch(96% 0.01 260);
+  
+  --accent: oklch(65% 0.25 285); /* Vibrant Brand Purple */
+  --accent-bg: oklch(65% 0.25 285 / 0.1);
+  --accent-border: oklch(65% 0.25 285 / 0.5);
+  
+  --shadow: 
+    0 10px 15px -3px oklch(0% 0 0 / 0.05),
+    0 4px 6px -2px oklch(0% 0 0 / 0.02);
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+  /* Typography - Fluid Scales */
+  --font-sans: 'Instrument Sans', system-ui, sans-serif;
+  --font-display: 'Outfit', var(--font-sans);
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
+  /* Fluid typography using clamp() */
+  --step--2: clamp(0.69rem, 0.67rem + 0.11vw, 0.77rem);
+  --step--1: clamp(0.83rem, 0.79rem + 0.19vw, 0.96rem);
+  --step-0: clamp(1.00rem, 0.93rem + 0.33vw, 1.20rem);
+  --step-1: clamp(1.20rem, 1.09rem + 0.54vw, 1.50rem);
+  --step-2: clamp(1.44rem, 1.27rem + 0.85vw, 1.88rem);
+  --step-3: clamp(1.73rem, 1.48rem + 1.24vw, 2.34rem);
+  --step-4: clamp(2.07rem, 1.72rem + 1.76vw, 2.93rem);
+  --step-5: clamp(2.49rem, 1.99rem + 2.47vw, 3.66rem);
+
+  /* Spacing - Rhythm patterns */
+  --space-xs: clamp(0.75rem, 0.69rem + 0.25vw, 0.94rem);
+  --space-s: clamp(1rem, 0.93rem + 0.33vw, 1.25rem);
+  --space-m: clamp(1.5rem, 1.41rem + 0.44vw, 1.88rem);
+  --space-l: clamp(2rem, 1.88rem + 0.58vw, 2.5rem);
+
+  font-family: var(--font-sans);
+  font-size: var(--step-0);
+  line-height: 1.5;
+  letter-spacing: -0.011em;
   color: var(--text);
   background: var(--bg);
-  font-synthesis: none;
+  
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
+    --bg: oklch(18% 0.02 260); /* Deep obsidian with brand tint */
+    --text: oklch(85% 0.02 260);
+    --text-h: oklch(98% 0.01 260);
+    --border: oklch(30% 0.03 260);
+    --code-bg: oklch(22% 0.02 260);
+    --accent: oklch(75% 0.18 285);
+    --accent-bg: oklch(75% 0.18 285 / 0.2);
+    --accent-border: oklch(75% 0.18 285 / 0.4);
   }
 }
 
 body {
   margin: 0;
+  min-height: 100vh;
 }
 
 #root {
-  width: 1126px;
+  width: 1200px;
   max-width: 100%;
   margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
   min-height: 100svh;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  /* Visual boundary removed for a more immersive feel on large screens, 
+     but keeping the centered layout rhythm */
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
   color: var(--text-h);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  margin-top: 0;
 }
 
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
+h1 { font-size: var(--step-5); }
+h2 { font-size: var(--step-4); }
+h3 { font-size: var(--step-2); }
+
+button {
+  cursor: pointer;
+  font-family: var(--font-sans);
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), 
+              background 0.2s ease,
+              box-shadow 0.2s ease;
+}
+
+button:active {
+  transform: scale(0.96);
+}
+
+/* Glassmorphism with Purpose - Utility */
+.glass {
+  background: oklch(100% 0 0 / 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid oklch(100% 0 0 / 0.2);
+  @media (prefers-color-scheme: dark) {
+    background: oklch(20% 0.02 260 / 0.7);
+    border: 1px solid oklch(100% 0 0 / 0.1);
   }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-p {
-  margin: 0;
-}
-
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
-}
-
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
 }
