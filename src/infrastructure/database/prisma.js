@@ -1,20 +1,19 @@
 import 'dotenv/config';
 import { PrismaClient } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
+import pg from 'pg';
 
 /**
- * Instância do Prisma Client configurada para máxima estabilidade.
- * Removemos o adapter serverless para evitar conflitos no Windows/Localhost.
- * O Prisma gerencia a conexão nativamente usando a DATABASE_URL.
+ * Configuração oficial do Prisma 7 para PostgreSQL.
+ * Utilizamos o adaptador nativo do pg conforme exigido pela nova especificação.
  */
 const url = process.env.DATABASE_URL?.trim().replace(/^["']|["']$/g, '');
 
-console.log(`[PRISMA] Inicializando com URL: [${url?.substring(0, 20)}...]`);
+const pool = new pg.Pool({ connectionString: url });
+const adapter = new PrismaPg(pool);
 
-export const prisma = new PrismaClient({
-  datasourceUrl: url
-});
+export const prisma = new PrismaClient({ adapter });
 
-// Teste de conexão opcional (apenas log)
 prisma.$connect()
-  .then(() => console.log('[PRISMA] Conexão estabelecida com sucesso.'))
+  .then(() => console.log('[PRISMA] Conexão estabelecida com sucesso (Adapter PG).'))
   .catch((err) => console.error('[PRISMA] Erro ao conectar no banco:', err.message));
